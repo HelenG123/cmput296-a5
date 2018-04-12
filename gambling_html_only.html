@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blackjack</title>
+    <meta charset="UTF-8"/>
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light+Two" rel="stylesheet">
+    <script src="solution.js"></script>
+    <script>
+      'use strict';
+      var gambler;
+      window.onload = () => {
+        gambler = new Gambler("https://pizza.cs.ualberta.ca/296/", "tpYCGn9+pPJuG4jN4n5VPm4K86THIpS/KzIYpViOfXY=");
+      }
+    </script>
+    <style> 
+
+      /* Make the background black and change the font and its size. */
+      body {
+        background-color: black; 
+        font-family: 'Shadows Into Light', cursive;
+        color: white;
+      }
+
+      /* STYLE THE TOP PART OF THE WEBSITE  */
+      /* Use the blackjack gif on the page and cut off the weird text at the top. */
+      .afterHeader {
+        text-align: center;
+        background-image: url("https://i.pinimg.com/originals/1d/90/f3/1d90f3c0dab3cf0d5d18634722c87fbd.jpg");
+        background-repeat: no-repeat;
+        background-position: -50px;
+        background-size: 45%;
+        height: 309px;
+      }
+
+      /* Make the status font size bigger and position it to the right of the webpage. */
+      .status {
+        font-size: 100px; 
+        margin-left: 420px;
+      }
+
+      /* Make the session font size smaller and position it to the right side of the webpage. */
+      .session {
+        font-size: 60px; 
+        margin-left: 420px;
+      }
+      /***************************************************************************************/
+
+      /* Style the blackjack rule section and the license */
+      .beforeFooter {
+        text-align: center; 
+      }
+
+      .rulesTitle {
+        font-size: 60px;
+        padding-bottom: 0px;
+        margin-bottom: -30px;
+      }
+
+      .rulesContent {
+        font-size: 30px;
+        padding-top: 0px;
+        margin-top: 0px;
+        font-family: 'Shadows Into Light Two', cursive;
+      }
+
+      footer {
+        margin-top: 30px;
+        margin-bottom: 20px;
+        font-family: 'Shadows Into Light Two', cursive;
+        font-size: 20px;
+      }
+
+      a {
+        color: yellow;
+      }
+
+      .moneyBetDealerCards {
+        font-size: 60px;
+        text-align: center;
+      }
+
+      .money {
+        display: inline-block;
+        background-image: url("https://cdn.streamlabs.com/users/5497073/library/Emotion_Joy_Gumdrop-Money-Rain.gif");
+        background-size: 150%;
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+        height: 200px;
+        float: center;
+        margin-left: 70px;
+      }
+
+      .dealersCards {
+        display: inline-block;
+        background-image: url("https://media.giphy.com/media/Y4fKJtYARiNag/source.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 60%;
+        height: 200px;
+        float: center;
+      }
+
+      .yourCards {
+        font-weight: bold;
+        font-style: italic;
+        font-size: 80px;
+      }
+      /* Add a pseudoelement to put the money amount */
+
+      .results {
+        margin-top: -30px;
+        margin-bottom: -20px;
+        margin-left: 10px;
+        font-size: 40px;
+        font-weight: bold;
+      }
+
+      .playersActions {
+        margin-left: 150px;
+        margin-top: -50px;
+        margin-bottom: 50px;
+        font-size: 40px;
+      }
+
+      /* Taken from W3 Schools */
+      /* Link:  */
+      button {
+        -webkit-transition-duration: 0.4s; 
+        transition-duration: 0.4s;
+        /* display: inline-block; */
+        font-family: 'Shadows Into Light Two', cursive;
+        font-size: 60px;
+        background-color: yellow;
+        padding: 30px 30px;
+        text-align: center;
+        color: black;
+      }
+
+      button:hover {
+        background-color: black; 
+        color: white;
+      }
+
+      input {
+        font-family: 'Shadows Into Light Two', cursive;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 60px;
+        width: 10%;
+        text-align: center;
+        margin-right: 10px;
+      }
+
+
+    /****************************************************************************************/
+    </style>
+  </head>
+  <body>
+    <section class = "afterHeader">
+      <p> <span class = "status"> Status: Loading...</span> </br>
+          <span class = "session"> Session: Loading... </span> 
+      </p>
+    </section>
+
+    <!-- Displays the money, the bet, and the dealer's cards -->
+    <section class = "moneyBetDealerCards">
+      <p> 
+        <!-- Money display -->
+        <span class = "money"> Money </span> &emsp;&emsp;&emsp; 
+
+        <!-- Bet Display -->
+        <span class = "bet"> 
+          <button type="button" class = "bet"> Bet </button> 
+          <input type="number" value="0"/>
+        </span> &emsp;&emsp; 
+
+        <!-- Dealer's Cards Display -->
+        <span class = "dealersCards"> Dealer's Cards </span> </br>
+
+        <!-- Player's Cards Display -->
+        <span class = "yourCards"> Your Cards </span> </br> 
+    
+      </p>
+    </section>
+
+    <!-- Display Player's Actions (e.g. Stand, Hit, etc) -->
+    <section class = "playersActions">
+        <button type="button" name = "stand" onclick="window.gambler.stand()">Stand</button>
+        <button type="button" name = "hit" onclick="window.gambler.hit()">Hit</button>
+        <button type="button" name = "double_down" onclick="window.gambler.double_down()">Double Down</button>
+        <button type="button" name = "surrender" onclick="window.gambler.surrender()">Surrender</button>
+    </section>
+
+    <!-- Add a horizontal rule/line to divide the page -->
+    <hr>
+
+    <!-- Display results, amount of bet, and profit. -->
+    <section class = "results">
+      <p> Result: </br>
+          Your Bet: </br>
+          You Made: </br>
+      </p>
+    </section>
+
+
+    <!-- Displays the rules and the license. -->
+    <section class = "beforeFooter">
+      <!-- These rules were taken from Joshua Campbell's gambling.html  -->
+      <hr>
+      <h1 class = "rulesTitle"> RULES </h1>
+      <span class = "rulesContent"> 
+        <p> The version of blackjack that we're using here involves: </br>
+            * no splitting; </br>
+            * the dealer hitting on Soft 17 and; </br>
+            * allowing only late surrenders. </br>
+          For more information on the rules of Blackjack: 
+          <a href="https://en.wikipedia.org/wiki/Blackjack"> Click me! </a>
+        </p>
+      </span>
+      <footer>
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Assignment 5 </span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Helen Gezahegn </span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+      </footer>
+    </section>
+
+
+  </body>
+  </html>
