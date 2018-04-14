@@ -5,14 +5,9 @@
     <meta charset="UTF-8"/>
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light+Two" rel="stylesheet">
-    <script src="solution.js"></script>
-    <script>
-      'use strict';
-      var gambler;
-      window.onload = () => {
-        gambler = new Gambler("https://pizza.cs.ualberta.ca/296/", "tpYCGn9+pPJuG4jN4n5VPm4K86THIpS/KzIYpViOfXY=");
-      }
-    </script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone/babel.js"></script>
     <style> 
 
       /* Make the background black and change the font and its size. */
@@ -41,7 +36,7 @@
 
       /* Make the session font size smaller and position it to the right side of the webpage. */
       .session {
-        font-size: 60px; 
+        font-size: 50px; 
         margin-left: 420px;
       }
       /***************************************************************************************/
@@ -72,7 +67,7 @@
       }
 
       a {
-        color: yellow;
+        color: #F6CB00;
       }
 
       .moneyBetDealerCards {
@@ -88,8 +83,13 @@
         background-position: center;
         text-align: center;
         height: 200px;
-        float: center;
-        margin-left: 70px;
+        padding: 20px;
+        margin-right: 190px;
+        
+      }
+
+      .moneyAmount {
+        margin-left: -990px;
       }
 
       .dealersCards {
@@ -100,6 +100,7 @@
         background-size: 60%;
         height: 200px;
         float: center;
+        color: white;
       }
 
       .yourCards {
@@ -123,6 +124,7 @@
         margin-bottom: 50px;
         font-size: 40px;
       }
+   
 
       /* Taken from W3 Schools */
       /* Link:  */
@@ -132,10 +134,12 @@
         /* display: inline-block; */
         font-family: 'Shadows Into Light Two', cursive;
         font-size: 60px;
-        background-color: yellow;
+        background-color: #F6CB00;
         padding: 30px 30px;
         text-align: center;
         color: black;
+        margin-right: 10px;
+        margin-left: 20px;
       }
 
       button:hover {
@@ -158,38 +162,195 @@
     </style>
   </head>
   <body>
-    
-    <section class = "afterHeader">
-      <p> <span class = "status"> Status: Loading...</span> </br>
 
-          <span class = "session"> Session: Loading... </span> 
-      </p>
-    </section>
+    <!-- USING REACT  -->
+    <!-- This is the canonical way to use react: the one root div -->
+    <div id="root"></div>
+    <script type="text/babel">{
+      'use strict';
+
+      // The parent component 
+      class Gambler extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            url: "https://pizza.cs.ualberta.ca/296/", 
+            token: "tpYCGn9+pPJuG4jN4n5VPm4K86THIpS/KzIYpViOfXY=", 
+            money: 0, 
+            session: "", 
+            status: null, 
+            game: null, 
+            last_game: null, 
+            bet: 0,
+            amount: 0,
+          };
+          this.changed = this.changed.bind(this);
+          this.handleClick = this.handleClick.bind(this);
+          this.callFetch = this.callFetch.bind(this);
+
+          // Fetch the initial game state and set it to gameState
+          // LOCAL STORAGE this.callFetch(this.state.url);
+          this.callFetch(this.state.url+"sit");
+        
+        }
+
+        // The general fetch method
+        callFetch(url) {
+          var formData = new FormData();
+          // Store the token in the formData to be sent with the POST request.
+          formData.append("token", this.state.token);
+          formData.append("amount", this.state.amount);
+          var that = this;
+          console.log(this);
+
+          // Fetch the POST request
+          fetch(url, {
+            method: 'POST', 
+            body: formData, 
+          }) 
+
+          // Retrieve the JSON body with the game state
+          .then(function(response) {
+            that.state.status = response.statusText;
+            return response.json()
+          })
+
+          // Set the state to the current game state
+          .then(function(response) {
+            that.setState(response); 
+            
+          });
+        }
+        // Update the State of the gambling game.
+        changed(event) {
+          var name = event.target.name;
+          var value = event.target.value;
+          this.setState({
+            [name]: value,
+          });
+        }
+
+        handleClick(event) {
+          var name = event.target.name;
+          var value = event.target.value;
+          this.setState({
+            [name]: value,
+          });
+          
+          if (name == "bet") {
+            this.callFetch(this.state.url+this.state.session+"/bet");
+            
+            console.log(this.state.dealer_hand);
+          }
+        }
+
+        render() {
+          
+          return ( 
+           
+           <div> 
+              <Status status = {this.state.status} session = {this.state.session} />
+              <Betting money = {this.state.money} amount = {this.state.amount} bet = {this.state.bet} changed = {this.changed} handleClick = {this.handleClick}/>
+              {/* <Game dealerHand = {this.state.game.dealer_hand} /> */}
+          </div> 
+            
+          );
+        }
+
+      }
+
+      class Status extends React.Component {
+        // Component that contains the status and session. 
+        render() {
+          return (
+             // Display the status and session of the webpage
+            <div>
+            
+              <section className = "afterHeader">
+                  <p> <span className = "status"> Status: {this.props.status} </span>
+                      <span className = "session"> Session: {this.props.session} </span> 
+                  </p>
+              </section>
+            </div>
+          );
+        }
+      }
+      
+      class Betting extends React.Component {
+        // Component  which contains the money display and betting amount and the bet button
+
+        render() {
+          // for testing: console.log(this);
+          return (
+            <div>
+              <section className = "moneyBetDealerCards">
+                <p>
+                  <span className = "money"> Money </span> 
+                  <span className = "bet">
+                                                                                     {/* Possible problem with onClick*/}
+                      <button type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet: </button>
+                      <input type = "number" name = "amount" value = {this.props.amount} onChange ={this.props.changed}/>
+                  </span> &emsp;&emsp;
+                  <span className = "dealersCards"> Dealer's Cards </span>
+
+                  <br/> <span className = "moneyAmount"> {this.props.money} </span>
+                </p>
+              </section>
+            </div>
+          );
+        }
+      }
+
+      class Game extends React.Component {
+      // Component that contains 
+      render() {
+        // if (this.props.dealerHand == "null") {
+        //   this.props.dealerHand = "";
+        // }
+        return (
+          <div>
+            <section className = "moneyBetDealerCards">
+                <span className = "dealersCards"> {this.props.dealerHand} </span>
+                
+            </section>
+          </div>
+        )
+      }
+
+      }
+      ReactDOM.render(<main>
+        <Gambler/>
+      </main>, document.getElementById('root'));
+      } 
+    </script>
+    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+   
+  <!-- STATIC HTML   -->
 
     <!-- Displays the money, the bet, and the dealer's cards -->
     <section class = "moneyBetDealerCards">
       <p> 
         <!-- Money display -->
-        <span class = "money"> Money </span> &emsp;&emsp;&emsp; 
+        <!-- <span class = "money"> Money </span> &emsp;&emsp;&emsp;  -->
 
         <!-- Bet Display -->
-        <span class = "bet"> 
-          <button type="button" class = "bet"> Bet </button> 
+        <!-- <span class = "bet"> 
+          <button type="button" name = "betButton" > Bet </button> 
           <input type="number" value="0"/>
-        </span> &emsp;&emsp; 
+        </span> &emsp;&emsp;  -->
 
         <!-- Dealer's Cards Display -->
-        <span class = "dealersCards"> Dealer's Cards </span> </br>
+        <!-- <span class = "dealersCards"> Dealer's Cards </span> </br> -->
 
         <!-- Player's Cards Display -->
         <span class = "yourCards"> Your Cards </span> </br> 
-    
       </p>
     </section>
 
     <!-- Display Player's Actions (e.g. Stand, Hit, etc) -->
     <section class = "playersActions">
-        <button type="button" name = "stand" onclick="window.gambler.stand()">Stand</button>
+        <button type="button" class = "stand" onclick="window.gambler.stand()">Stand</button>
         <button type="button" name = "hit" onclick="window.gambler.hit()">Hit</button>
         <button type="button" name = "double_down" onclick="window.gambler.double_down()">Double Down</button>
         <button type="button" name = "surrender" onclick="window.gambler.surrender()">Surrender</button>
