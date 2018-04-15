@@ -228,8 +228,8 @@
 
         
         initialState() {
-          // console.log(localStorage.getItem("session"));
-          // Fetch the initial game state and set it to gameState
+          // Fetch the initial game state and figure out if there's
+          // an existing previous session
           if (localStorage.getItem("session") != null) {
             this.post(this.state.url+localStorage.getItem("session")+"/")
           }
@@ -262,16 +262,21 @@
 
           // Set the state to the current game state
           .then(function(response) {
+            // So previous game states are not kept
             that.state.game = null;
             that.state.last_game = null;
             that.setState(response);
            
+            // LOCAL STORAGE HANDLING
+            // If there's a previous session, update the (3 lines before) previously
+            // set state to have this session
             if (localStorage.getItem("session") != null) {
               that.setState({
               [that.state.session]: localStorage.getItem("session"),
              })
             }
             else {
+              // If no previous session existed, record in localStorage
               localStorage.setItem("session", that.state.session);
               that.setState({
                 [that.state.session]: localStorage.getItem("session"),
@@ -294,6 +299,7 @@
         handleClick(event) {
           var name = event.target.name;
           var value = event.target.value;
+          this.state.hitButtonClicked = false;
           this.setState({
             [name]: value,
           });
@@ -395,18 +401,22 @@
       /* Component that contains which contains the game display (dealer's hand, your hand,
             stand, hit, double down, surrender, result, and how much was won).
       */
-        constructor(props) {
-          super(props);
-        }
+       
+
       stand() {
-        // console.log(this.props.state); 
-        this.handleClick("stand");
+        {this.handleClick(props)}
       }
+
+
       render() {
         console.log(this.props.state);
         
-        var result = "Game is still in progress..."
-        var won = "Game is still in progress..."
+        if (this.props.state.money > 0) {
+          var result = "Game is still in progress...";
+          var won = "Game is still in progress...";
+        }
+        
+       
         
         this.props.state.hitButtonClicked = false;
         // CHECK THE GAME STATE
@@ -520,7 +530,7 @@
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "stand" onClick={this.stand}>Stand</button>
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "hit" onClick={this.props.handleClick}>Hit</button>
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "double_down" onClick={this.props.handleClick}>Double Down</button>
-            <button disabled = {!this.props.state.betButtonClicked || this.props.state.hitButtonClicked} type="button" name = "surrender" onClick={this.props.handleClick}>Surrender</button>
+            <button disabled = {!this.props.state.betButtonClicked || !this.props.state.hitButtonClicked} type="button" name = "surrender" onClick={this.props.handleClick}>Surrender</button>
           </section>
 
           {/* Display results, amount of bet, and profit. */}
