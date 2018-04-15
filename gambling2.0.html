@@ -84,20 +84,14 @@
       }
 
     /* STYLING THE BETTING COMPONENT */
-      .betting {
-        text-align: center; 
-        font-size: 45px;
-      }
-      .bettingRowOne:nth-child(1) {
-      
-      }
-
-      .bettingRowOne p {
-        /* Displays the bettingRowOne  */
+      .betting p {
         display: inline-block;
-        padding-left: 80px;
-        padding-right: 80px;
+        padding-left: 15px;
+        padding-right: 15px;
         margin-top: -30px;
+        text-align: center;
+        margin-left: 50px; 
+        font-size: 45px;
       }
 
       .moneyAmount, .betAmount, .betButton {
@@ -109,42 +103,23 @@
         background-image: url("https://cdn.streamlabs.com/users/5497073/library/Emotion_Joy_Gumdrop-Money-Rain.gif");
         background-repeat: no-repeat;
         background-position: center -10px;
-        background-size: 80%;
+        background-size: 100%;
         height: 150px;
       }
       
       .betAmountDisplay {
         background-image: url("http://cdn.streamlabs.com/users/4701422/library/tumblr_mbnik2lM8i1qdpzt2o1_1280%5B1%5D.gif");
         background-repeat: no-repeat;
-        background-size: 100%;
+        background-size: 120%;
         background-position: center 50px;
         background-position-x: -40px;
         height: 150px;
-        background-
-      
       }
+
       .betButton {
-        padding: 20px 40px;
+        padding: 20px 30px;
         border-radius: 8px;
       }
-/* 
-      
-      .moneyTitle {
-        display: inline-block;
-        background-image: url("https://cdn.streamlabs.com/users/5497073/library/Emotion_Joy_Gumdrop-Money-Rain.gif");
-        background-size: 150%;
-        background-repeat: no-repeat;
-        background-position: center;
-        text-align: center;
-        height: 200px;
-        padding: 20px;
-        margin-right: 190px;
-        
-      } */
-
-      /* .moneyAmount {
-        margin-left: -990px;
-      } */
 
       .dealersCards {
         display: inline-block;
@@ -192,7 +167,7 @@
         text-align: center;
         color: black;
         margin-right: 10px;
-        margin-left: 20px;
+        /* margin-left: 20px; */
       }
 
       button:hover {
@@ -204,11 +179,12 @@
         font-family: 'Shadows Into Light Two', cursive;
         font-weight: bold;
         display: inline-block;
-        font-size: 60px;
-        width: 10%;
         text-align: center;
-        margin-right: 10px;
+        width: 10%;
+        font-size: 50px;
       }
+/* 
+     
 
 
     /****************************************************************************************/
@@ -338,8 +314,8 @@
         render() {
           // for testing: console.log(this);
           return (
-            <div className = "betting">
-              <section className = "bettingRowOne"> 
+            <div>
+              <section className = "betting"> 
 
                 {/* The money title with the player's money amount remaining */}
                 <p className = "moneyDisplay"> 
@@ -350,12 +326,14 @@
                 {/* The bet button */}
                 <p> 
                   <button className = "betButton" type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet </button>
+                  <input type = "number" name = "amount" value = {this.props.amount} onChange ={this.props.changed}/>
                 </p> 
 
                 {/* The 'You Bet' title with the bet amount*/}
                 <p className = "betAmountDisplay">You Bet: 
                   <span className = "betAmount"> {this.props.bet} </span>
                 </p>
+
               </section>
 
               
