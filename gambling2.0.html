@@ -17,30 +17,38 @@
         color: white;
       }
 
-      /* STYLE THE TOP PART OF THE WEBSITE  */
+    /* STYLE THE TOP PART OF THE WEBSITE */
       /* Use the blackjack gif on the page and cut off the weird text at the top. */
+      /* Position the status and session in the center */
       .afterHeader {
-        text-align: center;
+        /* text-align: center; */
         background-image: url("https://i.pinimg.com/originals/1d/90/f3/1d90f3c0dab3cf0d5d18634722c87fbd.jpg");
         background-repeat: no-repeat;
-        background-position: -50px;
-        background-size: 45%;
+        background-position: left -20px;
+        background-size: 35%;
         height: 309px;
+        text-align: center;  
+      }
+
+      .status, .session {
+        margin-left: 400px;
       }
 
       /* Make the status font size bigger and position it to the right of the webpage. */
       .status {
-        font-size: 100px; 
-        margin-left: 420px;
+        
+        font-size: 80px; 
       }
 
       /* Make the session font size smaller and position it to the right side of the webpage. */
       .session {
         font-size: 50px; 
-        margin-left: 420px;
+        /* margin-left: 420px; */
       }
-      /***************************************************************************************/
 
+      /***************************************************************************************/
+    
+    /* MORE STYLING */
       /* Style the blackjack rule section and the license */
       .beforeFooter {
         text-align: center; 
@@ -75,7 +83,37 @@
         text-align: center;
       }
 
-      .money {
+    /* STYLING THE BETTING COMPONENT */
+      .betting {
+        text-align: center; 
+        font-size: 40px;
+      }
+      .bettingRowOne:nth-child(1) {
+        
+
+      }
+
+      .bettingRowOne p {
+        /* Displays the bettingRowOne  */
+        display: inline-block;
+        padding-left: 80px;
+        padding-right: 80px;
+        margin-top: -30px;
+      }
+
+      .moneyAmount, .betAmount, .betButton {
+        font-size: 60px;
+        font-weight: bold;
+      }
+
+      .betButton {
+        padding: 20px 40px;
+        border-radius: 8px;
+        
+      }
+/* 
+      
+      .moneyTitle {
         display: inline-block;
         background-image: url("https://cdn.streamlabs.com/users/5497073/library/Emotion_Joy_Gumdrop-Money-Rain.gif");
         background-size: 150%;
@@ -86,11 +124,11 @@
         padding: 20px;
         margin-right: 190px;
         
-      }
+      } */
 
-      .moneyAmount {
+      /* .moneyAmount {
         margin-left: -990px;
-      }
+      } */
 
       .dealersCards {
         display: inline-block;
@@ -125,7 +163,6 @@
         font-size: 40px;
       }
    
-
       /* Taken from W3 Schools */
       /* Link:  */
       button {
@@ -251,11 +288,11 @@
           
           return ( 
            
-           <div> 
+            <div>
               <Status status = {this.state.status} session = {this.state.session} />
               <Betting money = {this.state.money} amount = {this.state.amount} bet = {this.state.bet} changed = {this.changed} handleClick = {this.handleClick}/>
               <Game state = {this.state}/> 
-          </div> 
+            </div>
             
           );
         }
@@ -270,7 +307,7 @@
             <div>
             
               <section className = "afterHeader">
-                  <p> <span className = "status"> Status: {this.props.status} </span>
+                  <p> <span className = "status"> Status: {this.props.status} </span> <br/>
                       <span className = "session"> Session: {this.props.session} </span> 
                   </p>
               </section>
@@ -280,25 +317,33 @@
       }
       
       class Betting extends React.Component {
-        // Component  which contains the money display and betting amount and the bet button
+        // Component which contains the money display and betting amount and the bet button
 
         render() {
           // for testing: console.log(this);
           return (
-            <div>
-              <section className = "moneyBetDealerCards">
-                <p>
-                  <span className = "money"> Money </span> 
-                  <span className = "bet">
-                                                                                     {/* Possible problem with onClick*/}
-                      <button type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet: </button>
-                      <input type = "number" name = "amount" value = {this.props.amount} onChange ={this.props.changed}/>
-                  </span> &emsp;&emsp;
+            <div className = "betting">
+              <section className = "bettingRowOne"> 
 
-                  <br/> <span className = "moneyAmount"> {this.props.money} </span>
+                {/* The money title with the player's money amount remaining */}
+                <p> Money 
+                  <span className = "moneyAmount"> {this.props.money} </span>
+                </p>
+                
+                {/* The bet button */}
+                <p> 
+                  <button className = "betButton" type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet </button>
+                </p> 
+
+                {/* The 'You Bet' title with the bet amount*/}
+                <p> You Bet 
+                  <span className = "betAmount"> {this.props.bet} </span>
                 </p>
               </section>
+
+              
             </div>
+       
           );
         }
       }
