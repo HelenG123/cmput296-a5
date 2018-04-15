@@ -183,6 +183,7 @@
             last_game: null, 
             bet: 0,
             amount: 0,
+            betButtonClicked: false, 
           };
           this.changed = this.changed.bind(this);
           this.handleClick = this.handleClick.bind(this);
@@ -201,7 +202,7 @@
           formData.append("token", this.state.token);
           formData.append("amount", this.state.amount);
           var that = this;
-          console.log(this);
+          
 
           // Fetch the POST request
           fetch(url, {
@@ -239,8 +240,10 @@
           
           if (name == "bet") {
             this.callFetch(this.state.url+this.state.session+"/bet");
-            
-            console.log(this.state.dealer_hand);
+
+            // To help make the other buttons unclickable, set the Boolean value
+            // to true. 
+            this.state.betButtonClicked = true; 
           }
         }
 
@@ -251,7 +254,7 @@
            <div> 
               <Status status = {this.state.status} session = {this.state.session} />
               <Betting money = {this.state.money} amount = {this.state.amount} bet = {this.state.bet} changed = {this.changed} handleClick = {this.handleClick}/>
-              {/* <Game dealerHand = {this.state.game.dealer_hand} /> */}
+              <Game state = {this.state}/> 
           </div> 
             
           );
@@ -291,7 +294,6 @@
                       <button type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet: </button>
                       <input type = "number" name = "amount" value = {this.props.amount} onChange ={this.props.changed}/>
                   </span> &emsp;&emsp;
-                  <span className = "dealersCards"> Dealer's Cards </span>
 
                   <br/> <span className = "moneyAmount"> {this.props.money} </span>
                 </p>
@@ -304,13 +306,14 @@
       class Game extends React.Component {
       // Component that contains 
       render() {
+        
         // if (this.props.dealerHand == "null") {
         //   this.props.dealerHand = "";
         // }
         return (
           <div>
             <section className = "moneyBetDealerCards">
-                <span className = "dealersCards"> {this.props.dealerHand} </span>
+               {/*} <span className = "dealersCards"> {this.props.dealerHand} </span> */}
                 
             </section>
           </div>
