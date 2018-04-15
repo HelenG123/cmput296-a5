@@ -78,6 +78,9 @@
         color: #F6CB00;
       }
 
+      div {
+        text-align: center;
+      }
       .moneyBetDealerCards {
         font-size: 60px;
         text-align: center;
@@ -90,7 +93,7 @@
         padding-right: 15px;
         margin-top: -30px;
         text-align: center;
-        margin-left: 50px; 
+        /* margin-left: 50px;  */
         font-size: 45px;
       }
 
@@ -120,9 +123,24 @@
         padding: 20px 30px;
         border-radius: 8px;
       }
+    /* STYLING THE GAME COMPONENT */ 
+      .displayCards p {
+        display: inline-block;
+        margin-top: -0.5px;
+        text-align: center;
+        font-size: 60px;
+        font-weight: bold;
+      }
 
       .dealersCards {
-        display: inline-block;
+        margin-right: 80px;  
+      }
+
+      .playersCards {
+        margin-left: 80px;
+      }
+      
+      /* .dealersCards {
         background-image: url("https://media.giphy.com/media/Y4fKJtYARiNag/source.gif");
         background-repeat: no-repeat;
         background-position: center;
@@ -130,13 +148,13 @@
         height: 200px;
         float: center;
         color: white;
-      }
+      } */
 
-      .yourCards {
+      /* .yourCards {
         font-weight: bold;
         font-style: italic;
         font-size: 80px;
-      }
+      } */
       /* Add a pseudoelement to put the money amount */
 
       .results {
@@ -180,7 +198,7 @@
         font-weight: bold;
         display: inline-block;
         text-align: center;
-        width: 10%;
+        width: 20%;
         font-size: 50px;
       }
 /* 
@@ -344,18 +362,109 @@
       }
 
       class Game extends React.Component {
-      // Component that contains 
+      /* Component that contains which contains the game display (dealer's hand, your hand,
+            stand, hit, double down, surrender, result, and how much was won).
+      */
+      
       render() {
+        // CHECK THE GAME STATE
+        // If the game hasn't started yet
+        if ((this.props.state.last_game == null) && (this.props.state.game == null)) {
+          var dealersCards = false;
+          var playersCards = false;
+        }
+
+        // If the game has started and it's on the last round of the current game
+        else if (this.props.state.last_game != null) {
+          var dealersCards = this.props.state.last_game.dealer_hand;
+          var playersCards = this.props.state.last_game.player_hand;
         
-        // if (this.props.dealerHand == "null") {
-        //   this.props.dealerHand = "";
-        // }
+        // HANDLING DEALER AND PLAYER'S CARDS
+          // For the dealer: Replace the facecards and ace with its appropriate letter.
+          for (var i = 0; i < dealersCards.length; i++) {
+            if (dealersCards[i] == 1) {
+                dealersCards[i] = "A";
+            }
+            if (dealersCards[i] == 11) {
+                dealersCards[i] = "J";
+            }
+            if (dealersCards[i] == 12) {
+                dealersCards[i] = "Q";
+            }
+            if (dealersCards[i] == 13) {
+                dealersCards[i] = "K";
+            }
+          };
+
+          // For the player: Replace the facecards and ace with its appropriate letter
+          for (var i = 0; i < playersCards.length; i++) {
+            if (playersCards[i] == 1) {
+                playersCards[i] = "A";
+            }
+            if (playersCards[i] == 11) {
+                playersCards[i] = "J";
+            }
+            if (playersCards[i] == 12) {
+                playersCards[i] = "Q";
+            }
+            if (playersCards[i] == 13) {
+                playersCards[i] = "K";
+            }
+          };
+        }
+
+        // If the game has started and it's not on the last round of the current game
+        else if (this.props.state.game != null) {
+          var dealersCards = this.props.state.game.dealer_hand;
+          var playersCards = this.props.state.game.player_hand;
+
+        // HANDLING DEALER AND PLAYER'S CARDS
+          // For the dealer: Replace the facecards and ace with its appropriate letter.
+          for (var i = 0; i < dealersCards.length; i++) {
+            if (dealersCards[i] == 1) {
+                dealersCards[i] = "A";
+            }
+            if (dealersCards[i] == 11) {
+                dealersCards[i] = "J";
+            }
+            if (dealersCards[i] == 12) {
+                dealersCards[i] = "Q";
+            }
+            if (dealersCards[i] == 13) {
+                dealersCards[i] = "K";
+            }
+          };
+
+          // For the player: Replace the facecards and ace with its appropriate letter
+          for (var i = 0; i < playersCards.length; i++) {
+            if (playersCards[i] == 1) {
+                playersCards[i] = "A";
+            }
+            if (playersCards[i] == 11) {
+                playersCards[i] = "J";
+            }
+            if (playersCards[i] == 12) {
+                playersCards[i] = "Q";
+            }
+            if (playersCards[i] == 13) {
+                playersCards[i] = "K";
+            }
+          };
+        }
+
+        
         return (
           <div>
-            <section className = "moneyBetDealerCards">
-               {/*} <span className = "dealersCards"> {this.props.dealerHand} </span> */}
-                
+            <section className = "displayCards">
+              <p>
+                <span className = "dealersCards"> Dealer's Cards: {dealersCards ? dealersCards.join(', ') : "Empty"} </span>
+                <span className = "playersCards"> Your Cards: {playersCards ? playersCards.join(', ') : "Empty"} </span>
+              </p>
+
+              
+            
             </section>
+            
           </div>
         )
       }
@@ -374,20 +483,8 @@
     <!-- Displays the money, the bet, and the dealer's cards -->
     <section class = "moneyBetDealerCards">
       <p> 
-        <!-- Money display -->
-        <!-- <span class = "money"> Money </span> &emsp;&emsp;&emsp;  -->
-
-        <!-- Bet Display -->
-        <!-- <span class = "bet"> 
-          <button type="button" name = "betButton" > Bet </button> 
-          <input type="number" value="0"/>
-        </span> &emsp;&emsp;  -->
-
-        <!-- Dealer's Cards Display -->
-        <!-- <span class = "dealersCards"> Dealer's Cards </span> </br> -->
-
         <!-- Player's Cards Display -->
-        <span class = "yourCards"> Your Cards </span> </br> 
+        <!-- <span class = "yourCards"> Your Cards </span> </br>  -->
       </p>
     </section>
 
@@ -405,7 +502,6 @@
     <!-- Display results, amount of bet, and profit. -->
     <section class = "results">
       <p> Result: </br>
-          Your Bet: </br>
           You Made: </br>
       </p>
     </section>
