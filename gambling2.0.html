@@ -86,11 +86,10 @@
     /* STYLING THE BETTING COMPONENT */
       .betting {
         text-align: center; 
-        font-size: 40px;
+        font-size: 45px;
       }
       .bettingRowOne:nth-child(1) {
-        
-
+      
       }
 
       .bettingRowOne p {
@@ -106,10 +105,27 @@
         font-weight: bold;
       }
 
+      .moneyDisplay {
+        background-image: url("https://cdn.streamlabs.com/users/5497073/library/Emotion_Joy_Gumdrop-Money-Rain.gif");
+        background-repeat: no-repeat;
+        background-position: center -10px;
+        background-size: 80%;
+        height: 150px;
+      }
+      
+      .betAmountDisplay {
+        background-image: url("http://cdn.streamlabs.com/users/4701422/library/tumblr_mbnik2lM8i1qdpzt2o1_1280%5B1%5D.gif");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center 50px;
+        background-position-x: -40px;
+        height: 150px;
+        background-
+      
+      }
       .betButton {
         padding: 20px 40px;
         border-radius: 8px;
-        
       }
 /* 
       
@@ -326,7 +342,8 @@
               <section className = "bettingRowOne"> 
 
                 {/* The money title with the player's money amount remaining */}
-                <p> Money 
+                <p className = "moneyDisplay"> 
+                  Money:
                   <span className = "moneyAmount"> {this.props.money} </span>
                 </p>
                 
@@ -336,7 +353,7 @@
                 </p> 
 
                 {/* The 'You Bet' title with the bet amount*/}
-                <p> You Bet 
+                <p className = "betAmountDisplay">You Bet: 
                   <span className = "betAmount"> {this.props.bet} </span>
                 </p>
               </section>
