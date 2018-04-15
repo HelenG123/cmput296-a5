@@ -221,7 +221,7 @@
           };
           this.changed = this.changed.bind(this);
           this.handleClick = this.handleClick.bind(this);
-          this.callFetch = this.callFetch.bind(this);
+          this.post = this.post.bind(this);
           this.initialState();
           
         }
@@ -234,22 +234,22 @@
             this.setState({
               [this.state.session]: localStorage.getItem("session"),
             })
-            this.callFetch(this.state.url+localStorage.getItem("session")+"/")
+            this.post(this.state.url+localStorage.getItem("session")+"/")
           }
           else {
-            this.callFetch(this.state.url+"sit");
+            this.post(this.state.url+"sit");
           }
-          // LOCAL STORAGE this.callFetch(this.state.url);
+          // LOCAL STORAGE this.post(this.state.url);
           // if (localStorage.getItem("session") != undefined) {
-          //   this.callFetch(this.state.url+localStorage.getItem("session")+"/");
+          //   this.post(this.state.url+localStorage.getItem("session")+"/");
           // }
           // else {
-          //   this.callFetch(this.state.url+"sit");
+          //   this.post(this.state.url+"sit");
           // }
         }
         
         // The general fetch method
-        callFetch(url) {
+        post(url) {
           var formData = new FormData();
           // Store the token in the formData to be sent with the POST request.
           formData.append("token", this.state.token);
@@ -305,7 +305,7 @@
           });
           
           if (name == "bet") {
-            this.callFetch(this.state.url+this.state.session+"/bet");
+            this.post(this.state.url+this.state.session+"/bet");
 
             // To help make the other buttons unclickable, set the Boolean value
             // to true. 
@@ -313,20 +313,20 @@
           }
 
           if (name == "stand") {
-            this.callFetch(this.state.url+this.state.session+"/stand");
+            this.post(this.state.url+this.state.session+"/stand");
           }
 
           if (name == "hit") {
-            this.callFetch(this.state.url+this.state.session+"/hit");
+            this.post(this.state.url+this.state.session+"/hit");
             this.state.hitButtonClicked = true;
           }
 
           if (name == "double_down") {
-            this.callFetch(this.state.url+this.state.session+"/double_down");
+            this.post(this.state.url+this.state.session+"/double_down");
           }
 
           if (name == "surrender") {
-            this.callFetch(this.state.url+this.state.session+"/surrender");
+            this.post(this.state.url+this.state.session+"/surrender");
           }
         }
 
@@ -401,7 +401,13 @@
       /* Component that contains which contains the game display (dealer's hand, your hand,
             stand, hit, double down, surrender, result, and how much was won).
       */
-      
+        constructor(props) {
+          super(props);
+        }
+      stand() {
+        // console.log(this.props.state); 
+        this.handleClick("stand");
+      }
       render() {
         console.log(this.props.state);
         
@@ -517,7 +523,7 @@
 
           {/* Display Player's Actions (e.g. Stand, Hit, etc) */}
           <section className = "playersActions">
-            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "stand" onClick={this.props.handleClick}>Stand</button>
+            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "stand" onClick={this.stand}>Stand</button>
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "hit" onClick={this.props.handleClick}>Hit</button>
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "double_down" onClick={this.props.handleClick}>Double Down</button>
             <button disabled = {!this.props.state.betButtonClicked || this.props.state.hitButtonClicked} type="button" name = "surrender" onClick={this.props.handleClick}>Surrender</button>
