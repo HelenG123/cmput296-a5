@@ -217,6 +217,7 @@
             bet: 0,
             amount: 0,
             betButtonClicked: false, 
+            hitButtonClicked: false,
           };
           this.changed = this.changed.bind(this);
           this.handleClick = this.handleClick.bind(this);
@@ -250,6 +251,8 @@
 
           // Set the state to the current game state
           .then(function(response) {
+            that.state.game = null;
+            that.state.last_game = null;
             that.setState(response); 
             
           });
@@ -269,7 +272,6 @@
           this.setState({
             [name]: value,
           });
-          console.log(name, event);
           
           if (name == "bet") {
             this.callFetch(this.state.url+this.state.session+"/bet");
@@ -282,6 +284,19 @@
           if (name == "stand") {
             this.callFetch(this.state.url+this.state.session+"/stand");
           }
+
+          if (name == "hit") {
+            this.callFetch(this.state.url+this.state.session+"/hit");
+            this.state.hitButtonClicked = true;
+          }
+
+          if (name == "double_down") {
+            this.callFetch(this.state.url+this.state.session+"/double_down");
+          }
+
+          if (name == "surrender") {
+            this.callFetch(this.state.url+this.state.session+"/surrender");
+          }
         }
 
         render() {
@@ -290,7 +305,7 @@
            
             <div>
               <Status status = {this.state.status} session = {this.state.session} />
-              <Betting money = {this.state.money} amount = {this.state.amount} bet = {this.state.bet} changed = {this.changed} handleClick = {this.handleClick}/>
+              <Betting betButtonClicked = {this.state.betButtonClicked} money = {this.state.money} amount = {this.state.amount} bet = {this.state.bet} changed = {this.changed} handleClick = {this.handleClick}/>
               <Game state = {this.state} handleClick = {this.handleClick} /> 
             </div>
             
@@ -333,8 +348,8 @@
                 
                 {/* The bet button */}
                 <p> 
-                  <button className = "betButton" type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet </button>
-                  <input type = "number" name = "amount" value = {this.props.amount} onChange ={this.props.changed}/>
+                  <button disabled = {this.props.betButtonClicked} className = "betButton" type = "button" name = "bet" value = {this.props.amount}  onClick={this.props.handleClick}> Bet </button>
+                  <input disabled = {this.props.betButtonClicked} type = "number" name = "amount" value = {this.props.amount} onChange ={this.props.changed}/>
                 </p> 
 
                 {/* The 'You Bet' title with the bet amount*/}
@@ -358,8 +373,11 @@
       
       render() {
         console.log(this.props.state);
+        
         var result = "Game is still in progress..."
         var won = "Game is still in progress..."
+        
+        this.props.state.hitButtonClicked = false;
         // CHECK THE GAME STATE
         // If the game hasn't started yet
         if ((this.props.state.last_game == null) && (this.props.state.game == null)) {
@@ -373,6 +391,9 @@
           var dealersCards = this.props.state.last_game.dealer_hand;
           var playersCards = this.props.state.last_game.player_hand;
         
+        // Make the bet button clickable after the round is over
+        this.props.state.betButtonClicked = false; 
+
         // HANDLING RESULTS
           var result = this.props.state.last_game.result;
           var won = this.props.state.last_game.won;
@@ -415,6 +436,9 @@
         else if (this.props.state.game != null) {
           var dealersCards = this.props.state.game.dealer_hand;
           var playersCards = this.props.state.game.player_hand;
+
+          this.props.state.betButtonClicked = true; 
+
 
         // HANDLING DEALER AND PLAYER'S CARDS
           // For the dealer: Replace the facecards and ace with its appropriate letter.
@@ -462,10 +486,10 @@
 
           {/* Display Player's Actions (e.g. Stand, Hit, etc) */}
           <section className = "playersActions">
-            <button type="button" name = "stand" onClick={this.props.handleClick}>Stand</button>
-            <button type="button" name = "hit">Hit</button>
-            <button type="button" name = "double_down">Double Down</button>
-            <button type="button" name = "surrender">Surrender</button>
+            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "stand" onClick={this.props.handleClick}>Stand</button>
+            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "hit" onClick={this.props.handleClick}>Hit</button>
+            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "double_down" onClick={this.props.handleClick}>Double Down</button>
+            <button disabled = {!this.props.state.betButtonClicked || this.props.state.hitButtonClicked} type="button" name = "surrender" onClick={this.props.handleClick}>Surrender</button>
           </section>
 
           {/* Display results, amount of bet, and profit. */}
