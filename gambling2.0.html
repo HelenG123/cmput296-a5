@@ -210,7 +210,7 @@
             url: "https://pizza.cs.ualberta.ca/296/", 
             token: "tpYCGn9+pPJuG4jN4n5VPm4K86THIpS/KzIYpViOfXY=", 
             money: 0, 
-            session: null, 
+            session: localStorage.getItem("session"), 
             status: null, 
             game: null, 
             last_game: null, 
@@ -231,21 +231,12 @@
           // console.log(localStorage.getItem("session"));
           // Fetch the initial game state and set it to gameState
           if (localStorage.getItem("session") != null) {
-            this.setState({
-              [this.state.session]: localStorage.getItem("session"),
-            })
             this.post(this.state.url+localStorage.getItem("session")+"/")
           }
           else {
             this.post(this.state.url+"sit");
           }
-          // LOCAL STORAGE this.post(this.state.url);
-          // if (localStorage.getItem("session") != undefined) {
-          //   this.post(this.state.url+localStorage.getItem("session")+"/");
-          // }
-          // else {
-          //   this.post(this.state.url+"sit");
-          // }
+  
         }
         
         // The general fetch method
@@ -277,11 +268,14 @@
            
             if (localStorage.getItem("session") != null) {
               that.setState({
-              session: localStorage.getItem("session"),
+              [that.state.session]: localStorage.getItem("session"),
              })
             }
             else {
               localStorage.setItem("session", that.state.session);
+              that.setState({
+                [that.state.session]: localStorage.getItem("session"),
+              })
             }
             
             
@@ -310,7 +304,7 @@
             // To help make the other buttons unclickable, set the Boolean value
             // to true. 
             this.state.betButtonClicked = true; 
-          }
+          }                 
 
           if (name == "stand") {
             this.post(this.state.url+this.state.session+"/stand");
