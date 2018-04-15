@@ -140,36 +140,21 @@
         margin-left: 80px;
       }
       
-      /* .dealersCards {
-        background-image: url("https://media.giphy.com/media/Y4fKJtYARiNag/source.gif");
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 60%;
-        height: 200px;
-        float: center;
-        color: white;
-      } */
-
-      /* .yourCards {
-        font-weight: bold;
-        font-style: italic;
-        font-size: 80px;
-      } */
-      /* Add a pseudoelement to put the money amount */
 
       .results {
         margin-top: -30px;
         margin-bottom: -20px;
         margin-left: 10px;
-        font-size: 40px;
+        font-size: 60px;
         font-weight: bold;
       }
 
       .playersActions {
-        margin-left: 150px;
-        margin-top: -50px;
+        margin-top: -35px;
         margin-bottom: 50px;
         font-size: 40px;
+        text-align: center;
+        float: center; 
       }
    
       /* Taken from W3 Schools */
@@ -182,6 +167,7 @@
         font-size: 60px;
         background-color: #F6CB00;
         padding: 30px 30px;
+        border-radius: 8px;
         text-align: center;
         color: black;
         margin-right: 10px;
@@ -249,7 +235,6 @@
           formData.append("token", this.state.token);
           formData.append("amount", this.state.amount);
           var that = this;
-          
 
           // Fetch the POST request
           fetch(url, {
@@ -284,6 +269,7 @@
           this.setState({
             [name]: value,
           });
+          console.log(name, event);
           
           if (name == "bet") {
             this.callFetch(this.state.url+this.state.session+"/bet");
@@ -291,6 +277,10 @@
             // To help make the other buttons unclickable, set the Boolean value
             // to true. 
             this.state.betButtonClicked = true; 
+          }
+
+          if (name == "stand") {
+            this.callFetch(this.state.url+this.state.session+"/stand");
           }
         }
 
@@ -301,7 +291,7 @@
             <div>
               <Status status = {this.state.status} session = {this.state.session} />
               <Betting money = {this.state.money} amount = {this.state.amount} bet = {this.state.bet} changed = {this.changed} handleClick = {this.handleClick}/>
-              <Game state = {this.state}/> 
+              <Game state = {this.state} handleClick = {this.handleClick} /> 
             </div>
             
           );
@@ -367,11 +357,15 @@
       */
       
       render() {
+        console.log(this.props.state);
+        var result = "Game is still in progress..."
+        var won = "Game is still in progress..."
         // CHECK THE GAME STATE
         // If the game hasn't started yet
         if ((this.props.state.last_game == null) && (this.props.state.game == null)) {
           var dealersCards = false;
           var playersCards = false;
+
         }
 
         // If the game has started and it's on the last round of the current game
@@ -379,6 +373,10 @@
           var dealersCards = this.props.state.last_game.dealer_hand;
           var playersCards = this.props.state.last_game.player_hand;
         
+        // HANDLING RESULTS
+          var result = this.props.state.last_game.result;
+          var won = this.props.state.last_game.won;
+
         // HANDLING DEALER AND PLAYER'S CARDS
           // For the dealer: Replace the facecards and ace with its appropriate letter.
           for (var i = 0; i < dealersCards.length; i++) {
@@ -460,10 +458,23 @@
                 <span className = "dealersCards"> Dealer's Cards: {dealersCards ? dealersCards.join(', ') : "Empty"} </span>
                 <span className = "playersCards"> Your Cards: {playersCards ? playersCards.join(', ') : "Empty"} </span>
               </p>
-
-              
-            
             </section>
+
+          {/* Display Player's Actions (e.g. Stand, Hit, etc) */}
+          <section className = "playersActions">
+            <button type="button" name = "stand" onClick={this.props.handleClick}>Stand</button>
+            <button type="button" name = "hit">Hit</button>
+            <button type="button" name = "double_down">Double Down</button>
+            <button type="button" name = "surrender">Surrender</button>
+          </section>
+
+          {/* Display results, amount of bet, and profit. */}
+          <hr/>
+          <section className = "results">
+            <p> Result: {result} <br/>
+                You Made: {won}<br/>
+            </p>
+          </section>
             
           </div>
         )
@@ -479,34 +490,6 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
    
   <!-- STATIC HTML   -->
-
-    <!-- Displays the money, the bet, and the dealer's cards -->
-    <section class = "moneyBetDealerCards">
-      <p> 
-        <!-- Player's Cards Display -->
-        <!-- <span class = "yourCards"> Your Cards </span> </br>  -->
-      </p>
-    </section>
-
-    <!-- Display Player's Actions (e.g. Stand, Hit, etc) -->
-    <section class = "playersActions">
-        <button type="button" class = "stand" onclick="window.gambler.stand()">Stand</button>
-        <button type="button" name = "hit" onclick="window.gambler.hit()">Hit</button>
-        <button type="button" name = "double_down" onclick="window.gambler.double_down()">Double Down</button>
-        <button type="button" name = "surrender" onclick="window.gambler.surrender()">Surrender</button>
-    </section>
-
-    <!-- Add a horizontal rule/line to divide the page -->
-    <hr>
-
-    <!-- Display results, amount of bet, and profit. -->
-    <section class = "results">
-      <p> Result: </br>
-          You Made: </br>
-      </p>
-    </section>
-
-
     <!-- Displays the rules and the license. -->
     <section class = "beforeFooter">
       <!-- These rules were taken from Joshua Campbell's gambling.html  -->
