@@ -9,12 +9,19 @@
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/babel-standalone/babel.js"></script>
     <style> 
-
       /* Make the background black and change the font and its size. */
       body {
         background-color: black; 
         font-family: 'Shadows Into Light', cursive;
         color: white;
+      }
+
+      a {
+        color: #F6CB00;
+      }
+
+      div {
+        text-align: center;
       }
 
     /* STYLE THE TOP PART OF THE WEBSITE */
@@ -48,7 +55,7 @@
 
       /***************************************************************************************/
     
-    /* MORE STYLING */
+    /* STYLING THE BOTTOM PART OF THE PAGE */
       /* Style the blackjack rule section and the license */
       .beforeFooter {
         text-align: center; 
@@ -74,13 +81,7 @@
         font-size: 20px;
       }
 
-      a {
-        color: #F6CB00;
-      }
-
-      div {
-        text-align: center;
-      }
+     
       .moneyBetDealerCards {
         font-size: 60px;
         text-align: center;
@@ -187,7 +188,7 @@
         width: 20%;
         font-size: 50px;
       }
-/* 
+ 
      
 
 
@@ -302,6 +303,7 @@
           this.state.hitButtonClicked = false;
           this.setState({
             [name]: value,
+            // [this.state.hitButtonClicked]: false,
           });
           
           if (name == "bet") {
@@ -327,6 +329,7 @@
 
           if (name == "surrender") {
             this.post(this.state.url+this.state.session+"/surrender");
+            // this.state.betButtonClicked = false;
           }
         }
 
@@ -401,24 +404,28 @@
       /* Component that contains which contains the game display (dealer's hand, your hand,
             stand, hit, double down, surrender, result, and how much was won).
       */
+        // constructor(props) {
+        //   super(props);
+        //   // this = this.props;
+        // }
        
 
-      stand() {
-        {this.handleClick(props)}
-      }
+      // stand() {
+      //   {this.props.handleClick("stand")}
+      // }
 
 
       render() {
-        console.log(this.props.state);
-        
+        // for testing: console.log(this.props.state);
+        // this.setState ({
+        //   [this.props.state.hitButtonClicked]: false,
+        // )}
+
         if (this.props.state.money > 0) {
           var result = "Game is still in progress...";
           var won = "Game is still in progress...";
         }
         
-       
-        
-        this.props.state.hitButtonClicked = false;
         // CHECK THE GAME STATE
         // If the game hasn't started yet
         if ((this.props.state.last_game == null) && (this.props.state.game == null)) {
@@ -515,6 +522,14 @@
           };
         }
 
+        // Surrender cannot show after hit has been clicked
+        var showSurrender;
+        if ((this.props.state.betButtonClicked) && (!this.props.state.hitButtonClicked)) {
+          showSurrender = false;
+        }
+        else {
+          showSurrender = true;
+        }
         
         return (
           <div>
@@ -527,10 +542,10 @@
 
           {/* Display Player's Actions (e.g. Stand, Hit, etc) */}
           <section className = "playersActions">
-            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "stand" onClick={this.stand}>Stand</button>
+            <button disabled = {!this.props.state.betButtonClicked} type="button" name = "stand" onClick={this.props.handleClick}>Stand</button>
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "hit" onClick={this.props.handleClick}>Hit</button>
             <button disabled = {!this.props.state.betButtonClicked} type="button" name = "double_down" onClick={this.props.handleClick}>Double Down</button>
-            <button disabled = {!this.props.state.betButtonClicked || !this.props.state.hitButtonClicked} type="button" name = "surrender" onClick={this.props.handleClick}>Surrender</button>
+            <button disabled = {showSurrender} type="button" name = "surrender" onClick={this.props.handleClick}>Surrender</button>
           </section>
 
           {/* Display results, amount of bet, and profit. */}
