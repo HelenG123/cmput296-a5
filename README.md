@@ -2,7 +2,7 @@
 
 This is the start of something special... my web development skills.
 
-Current Projects:
+*Current Projects:* 
 1) Blackjack (Free Gambling) Version 1
    - Main focus was on understanding JavaScript and fetch.
    - Read up of XHR (XMLHttpRequest) and compared against fetch (fetch won).
